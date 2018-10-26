@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"> 
+<head> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+
+    <script type="text/javascript">
+    function sendForm() {
+        var form = new FormData();
+        var etalonDocument = document.getElementById('etalonDocument').files[0]
+        var comparedDocument = document.getElementById('comparedDocument').files[0];
+        var processInfo = document.getElementById('ProcessComment');
+        var xhr = new XMLHttpRequest();
+        form.append("etalonDocument",etalonDocument);
+        form.append("comparedDocument",comparedDocument);
+        xhr.open('POST', "/upload/", true);
+
+        xhr.onload = function (e) {
+            processInfo.innerHTML = 'Verifiing completed. Here some info: ' + e.currentTarget.responseText;
+        }
+
+        xhr.upload.onprogress = function () {
+            processInfo.innerHTML = 'Verifing in process...';
+        }
+        xhr.send(form);
+        return false;
+    }
+    </script>
+<title>AI documents verificator</title>
+
+</head>
+<p>
+<p><h1>AI documents verificator</h1></p>
+
+Etalon file: <input type="file" id="etalonDocument" name="etalonDocument" /><br>
+Compared file: <input type="file" id="comparedDocument" name="comparedDocument" />
+<br />
+<br />
+<input type="button" value="upload" onclick="javascript:sendForm();"/>
+
+<br />
+<br />
+<p><h1>Results</h1></p>
+<label id = "ProcessComment">No process starded</label>

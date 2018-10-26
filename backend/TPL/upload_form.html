@@ -1,10 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
-<html xmlns="http://www.w3.org/1999/xhtml"> 
-<head> 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<!DOCTYPE html>
 
-
-    <script type="text/javascript">
+<html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <title>Deft | CodeRare</title>
+      <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+	  
+      <link href='{{static_url("css/theme-MariBlue.css")}}' rel="stylesheet" type="text/css" media="all"/>
+      <!--  Resources style ================== -->
+      
+	  <script type="text/javascript">
     function sendForm() {
         var form = new FormData();
         var etalonDocument = document.getElementById('etalonDocument').files[0]
@@ -13,7 +18,7 @@
         var xhr = new XMLHttpRequest();
         form.append("etalonDocument",etalonDocument);
         form.append("comparedDocument",comparedDocument);
-        xhr.open('POST', "/upload/", true);
+        xhr.open('POST', "http://192.168.9.252:8080/upload/", true);
 
         xhr.onload = function (e) {
             processInfo.innerHTML = 'Verifiing completed. Here some info: ' + e.currentTarget.responseText;
@@ -25,20 +30,133 @@
         xhr.send(form);
         return false;
     }
+	
+	$('#etalondoc').on('slide.bs.carousel', function () {
+		$(this).carousel('pause')
+		})
+		
+	function createCaruselItem()
+	{
+		var div = document.createElement("div");
+		div.style.width = "100px";
+		div.style.height = "100px";
+		div.style.background = "red";
+		document.getElementById("main").appendChild(div);
+	}
     </script>
-<title>AI documents verificator</title>
+	  
+    </head>
+    <body>
+      <section class="animsition">
 
-</head>
-<p>
-<p><h1>AI documents verificator</h1></p>
+        <div id="leftSide">
 
-Etalon file: <input type="file" id="etalonDocument" name="etalonDocument" /><br>
-Compared file: <input type="file" id="comparedDocument" name="comparedDocument" />
-<br />
-<br />
-<input type="button" value="upload" onclick="javascript:sendForm();"/>
+          <div id="home" class="">
+            <!-- Your logo -->
+  			    
 
-<br />
-<br />
-<p><h1>Results</h1></p>
-<label id = "ProcessComment">No process starded</label>
+            <div class="h-content" style="margin-top:-20%">
+              <h2>Автоматическая сверка текстов документов</h2>
+              <p>Разработка команды 109</p>
+            </div>
+			
+			<div class = "h-content" >
+			<p><h3>Эталонный документ:</h3> <input type="file" id="etalonDocument" name="etalonDocument" class="input" /></p>
+			<p><h3>Проверяемый документ:</h3> <input type="file" id="comparedDocument" name="comparedDocument" class="input" /></p>
+			<p><input style="color: #000000;" type="button" value="Сравнить" class="submit" onclick="javascript:sendForm();"/></p>
+			</div>
+            
+
+            <div id="particles-js" class="gradient"></div>
+            <div class="count-particles">
+              <span class="js-count-particles"></span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div id="rightSide">
+		
+			<div class="project" style="height:100%; padding-left:20px;">
+				<p><h3>Результаты работ</h3></p>
+				<label id = "ProcessComment">Работа пока не выполняется</label>
+				
+				<div id="etalondoc" class="carousel slide" style="interval: false" >
+				<!-- Indicators -->
+				<ol class="carousel-indicators" id="carouselindicators">
+					<li data-target="#etalondoc" data-slide-to="0" class="active"></li>
+					<li data-target="#etalondoc" data-slide-to="1"></li>
+					<li data-target="#etalondoc" data-slide-to="2"></li>
+				</ol>
+
+				<!-- Wrapper for slides -->
+				<div style="padding-right:20px; width:1000px;">
+				<div class="carousel-inner" data-ride="false" id="carousel-inner">
+					<div class="item active" style="align:center">
+					  <table border=0 width=100% style="padding-left:20%">
+					  <tr border=0>
+						<td><img style="height:700px;" src='{{static_url("completed/fsdfdf_1.jpg")}}' alt="Los Angeles"></td>
+					  	<td><img style="height:700px" src='{{static_url("completed/fsdfdf_2.jpg")}}' alt="Los Angeles"></td>
+					  </tr>
+					  </table>
+					</div>
+					
+					<div class="item" style="align:center">
+					  <table border=0>
+					  <tr border=0>
+						<td><img style="height:700px" src='{{static_url("completed/fsdfdf_1.jpg")}}' alt="Los Angeles"></td>
+					  	<td><img style="height:700px" src='{{static_url("completed/fsdfdf_2.jpg")}}' alt="Los Angeles"></td>
+					  </tr>
+					  </table>
+					</div>
+
+					<div class="item">
+						<img style="width:30%" src='{{static_url("completed/fsdfdf_3.jpg")}}' alt="New York">
+					</div>
+
+				</div>
+				</div>
+
+				<!-- Left and right controls -->
+				<a class="left carousel-control" href="#etalondoc" data-slide="prev">
+					<span class="glyphicon glyphicon-chevron-left"></span>
+					<span class="sr-only">Previous</span>
+				</a>
+				<a class="right carousel-control" href="#etalondoc" data-slide="next">
+					<span class="glyphicon glyphicon-chevron-right"></span>
+					<span class="sr-only">Next</span>
+				</a>
+				</div>
+				
+			</div>
+			
+			
+				
+			
+
+        </div>
+      </section>
+	
+	  <script src='{{static_url("js/jquery-1.11.3.min.js")}}'></script>
+      <script src='{{static_url("js/bootstrap.min.js")}}'></script>
+      <script src='{{static_url("js/animsition.min.js")}}'></script>
+	  <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+      <script src='{{static_url("js/jquery.magnific-popup.min.js")}}'></script>
+      <script src='{{static_url("js/jquery.countdown.min.js")}}'></script>
+      <script src='{{static_url("js/twitterFetcher_min.js")}}'></script>
+      <script src='{{static_url("js/masonry.pkgd.min.js")}}'></script>
+      <script src='{{static_url("js/imagesloaded.pkgd.min.js")}}'></script>
+      <script src='{{static_url("js/jquery.flexslider-min.js")}}'></script>
+      <script src='{{static_url("js/photoswipe.min.js")}}'></script>
+      <script src='{{static_url("js/photoswipe-ui-default.min.js")}}'></script>
+      <script src='{{static_url("js/jqinstapics.min.js")}}'></script>
+      <script src='{{static_url("js/particles.min.js")}}'></script>
+      
+	  <script type="text/javascript">
+        particlesJS("particles-js", {"particles":{"number":{"value":67,"density":{"enable":true,"value_area":800}},"color":{"value":"#ffffff"},"shape":{"type":"triangle","stroke":{"width":0,"color":"#000000"},"polygon":{"nb_sides":5},"image":{"src":"img/github.svg","width":100,"height":100}},"opacity":{"value":0.5,"random":false,"anim":{"enable":false,"speed":1,"opacity_min":0.1,"sync":false}},"size":{"value":12,"random":true,"anim":{"enable":false,"speed":40,"size_min":0.1,"sync":false}},"line_linked":{"enable":true,"distance":150,"color":"#ffffff","opacity":0.4,"width":1},"move":{"enable":true,"speed":6,"direction":"none","random":false,"straight":false,"out_mode":"out","bounce":false,"attract":{"enable":false,"rotateX":600,"rotateY":1200}}},"interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":false,"mode":"repulse"},"onclick":{"enable":false,"mode":"push"},"resize":true},"modes":{"grab":{"distance":400,"line_linked":{"opacity":1}},"bubble":{"distance":400,"size":40,"duration":2,"opacity":8,"speed":3},"repulse":{"distance":200,"duration":0.4},"push":{"particles_nb":4},"remove":{"particles_nb":2}}},"retina_detect":true});var count_particles, stats, update; stats = new Stats; stats.setMode(0); stats.domElement.style.position = 'absolute'; stats.domElement.style.left = '0px'; stats.domElement.style.top = '0px'; document.body.appendChild(stats.domElement); count_particles = document.querySelector('.js-count-particles'); update = function() { stats.begin(); stats.end(); if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) { count_particles.innerText = window.pJSDom[0].pJS.particles.array.length; } requestAnimationFrame(update); }; requestAnimationFrame(update);;
+      </script>
+	  <script src='{{static_url("js/script.js")}}'></script>
+      
+  </body>
+</html>

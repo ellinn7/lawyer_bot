@@ -1,4 +1,8 @@
+import os
+import io
+import sys
 import os.path
+from os.path import dirname
 import BackEnd.tornado.auth as TornadoAuth
 import BackEnd.tornado.httpserver as TornadoServer
 import BackEnd.tornado.ioloop as TornadoIoloop
@@ -11,7 +15,7 @@ import string
 from BackEnd.tornado.options import define, options
 
 define("port", default=8080, help="run on the given port", type=int)
-define("mysql_host", default="127.0.0.1", help="api database host")
+define("mysql_host", default="192.168.9.252", help="api database host")
 define("mysql_database", default="tornado_api", help="tornado_api database name")
 define("mysql_user", default="root", help="tornado_api database user")
 define("mysql_password", default="", help="tornado_api database password")
@@ -23,9 +27,9 @@ class Application(TornadoWeb.Application):
             (r"/demo", IndexHandler),
             (r"/upload/", DocsVerification)
         ]
-        settings = dict(
-            #autoescape=None,
-        )
+        settings = {
+            "static_path": "C:\\DEV\\lawyer_bot\\BackEnd\\TPL"
+            }
         TornadoWeb.Application.__init__(self, handlers, **settings)
 
 class IndexHandler(TornadoWeb.RequestHandler):
@@ -35,6 +39,8 @@ class IndexHandler(TornadoWeb.RequestHandler):
 class DocsVerification(TornadoWeb.RequestHandler):
     def post(self):
         try:
+            workdir = dirname(dirname(__file__))
+            uploadPath = os.path.join(workdir, r'BackEnd\\uploads')
             print("Get Etalon Document")
             etalonDocument = self.request.files['etalonDocument'][0]
             if etalonDocument['filename'] == '':
@@ -43,18 +49,19 @@ class DocsVerification(TornadoWeb.RequestHandler):
             extension = os.path.splitext(original_fname)[1]
             filename = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
             final_filename = filename + extension
-            output_file = open("uploads/" + final_filename, 'wb')
+            output_file =  open(os.path.join(uploadPath, final_filename), 'wb')
             output_file.write(etalonDocument['body'])
 
             print("Get Compared Document")
             comparedDocument = self.request.files['comparedDocument'][0]
+            print("Get Compared Document: " + comparedDocument['filename'])
             if not comparedDocument or not len(comparedDocument):
                 return self.write({"success":False})
             original_fname = comparedDocument['filename']
             extension = os.path.splitext(original_fname)[1]
             filename = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
             final_filename = filename + extension
-            output_file = open("uploads/" + final_filename, 'wb')
+            output_file = open(os.path.join(uploadPath, final_filename), 'wb')
             output_file.write(comparedDocument['body'])
 
             print("Start to veryfing documents")
