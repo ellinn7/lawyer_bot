@@ -87,6 +87,8 @@ for x in listdiff:
     x.priority = 2
   if re.match(symbols, x.value):
     x.priority = 3
+  if (x.priority == -1):
+    x.priority = 1
   print(x.value, x.filename, x.line, x.linenum, x.index, x.coord, x.priority)
 	
 
