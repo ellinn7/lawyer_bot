@@ -22,6 +22,30 @@
 
         xhr.onload = function (e) {
             processInfo.innerHTML = 'Verifiing completed. Here some info: ' + e.currentTarget.responseText;
+			document.getElementById("etalondoc").style.visibility = "visible";
+			createCaruselItem("fsdfdf_1.jpg","fsdfdf_2.jpg",0,1);
+			createCaruselItem("fsdfdf_3.jpg","fsdfdf_4.jpg",2,3);
+        }
+
+        xhr.upload.onprogress = function () {
+            processInfo.innerHTML = 'Verifing in process...';
+        }
+        xhr.send(form);
+        return false;
+    }
+	
+	function detectStamps() {
+        var form = new FormData();
+        var etalonDocument = document.getElementById('etalonDocument').files[0]
+        var processInfo = document.getElementById('ProcessComment');
+        var xhr = new XMLHttpRequest();
+        form.append("etalonDocument",etalonDocument);
+        xhr.open('POST', "http://192.168.9.252:8080/stamp/", true);
+
+        xhr.onload = function (e) {
+            processInfo.innerHTML = 'Verifiing completed. Here some info: ' + e.currentTarget.responseText;
+			document.getElementById("etalondoc").style.visibility = "hidden";
+			document.getElementById("stamp").style.visibility = "visible";
         }
 
         xhr.upload.onprogress = function () {
@@ -34,14 +58,71 @@
 	$('#etalondoc').on('slide.bs.carousel', function () {
 		$(this).carousel('pause')
 		})
+	
+	$('#etalondoc').on('slide.bs.carousel', function() {
+		var $this = $(this);
+
+		$this.children('.carousel-control').show();
+
+		if($('.carousel-inner .item:first').hasClass('active')) {
+			$this.children('.left.carousel-control').hide();
+		} else if($('.carousel-inner .item:last').hasClass('active')) {
+		$this.children('.right.carousel-control').hide();
+		}
+	});
 		
-	function createCaruselItem()
+	function createCaruselItem(img1src,img2src,id1,id2)
 	{
+
+		var baseDir = "/static/completed";
+		var tr = document.createElement("tr");
+		var td1 = document.createElement("td");
 		var div = document.createElement("div");
-		div.style.width = "100px";
-		div.style.height = "100px";
-		div.style.background = "red";
-		document.getElementById("main").appendChild(div);
+		div.className = "item";
+		var img1 = document.createElement("img");
+		img1.style.height = "700px";
+		img1.src = baseDir + "/" + img1src;;
+		
+		td1.appendChild(img1);
+
+		tr.appendChild(td1);
+		
+		var td2 = document.createElement("td");
+		
+		var img2 = document.createElement("img");
+		img2.style.height = "700px";
+		img2.src = baseDir + "/" + img2src;
+		
+		var li1 = document.createElement("li");
+		li1.setAttribute('data-target', "#etalondoc;");
+		li1.setAttribute('data-slide-to', id1.toString());
+		if (id1 == 0)
+		{
+		  li1.className = "active";
+		  div.className = "item active";
+		}
+
+		document.getElementById("carouselindicators").appendChild(li1);
+		
+		if (img2 != "")
+		{
+			td2.appendChild(img2);
+			tr.appendChild(td2);
+		
+			var li2 = document.createElement("li");
+			li2.setAttribute('data-target', "#etalondoc;");
+			li2.setAttribute('data-slide-to', id2.toString());
+			document.getElementById("carouselindicators").appendChild(li2);
+		}
+
+		var table = document.createElement("table");
+		table.appendChild(tr);
+		
+		
+		div.appendChild(table);
+		
+		document.getElementById("carousel-inner").appendChild(div);
+
 	}
     </script>
 	  
@@ -62,6 +143,7 @@
 			
 			<div class = "h-content" >
 			<p><h3>Эталонный документ:</h3> <input type="file" id="etalonDocument" name="etalonDocument" class="input" /></p>
+			<p><input style="color: #000000;" type="button" value="Проверить печать" class="submit" onclick="javascript:detectStamps();"/></p>
 			<p><h3>Проверяемый документ:</h3> <input type="file" id="comparedDocument" name="comparedDocument" class="input" /></p>
 			<p><input style="color: #000000;" type="button" value="Сравнить" class="submit" onclick="javascript:sendForm();"/></p>
 			</div>
@@ -82,39 +164,18 @@
 				<p><h3>Результаты работ</h3></p>
 				<label id = "ProcessComment">Работа пока не выполняется</label>
 				
-				<div id="etalondoc" class="carousel slide" style="interval: false" >
+				<div id="stamp"><img src="/static/overlay/test_result.jpg"></div>
+				
+				<div id="etalondoc" class="carousel slide" style="interval: false; width:1000px; visibility: hidden;"  data-wrap="false" >
 				<!-- Indicators -->
 				<ol class="carousel-indicators" id="carouselindicators">
-					<li data-target="#etalondoc" data-slide-to="0" class="active"></li>
-					<li data-target="#etalondoc" data-slide-to="1"></li>
-					<li data-target="#etalondoc" data-slide-to="2"></li>
+					
 				</ol>
 
 				<!-- Wrapper for slides -->
 				<div style="padding-right:20px; width:1000px;">
 				<div class="carousel-inner" data-ride="false" id="carousel-inner">
-					<div class="item active" style="align:center">
-					  <table border=0 width=100% style="padding-left:20%">
-					  <tr border=0>
-						<td><img style="height:700px;" src='{{static_url("completed/fsdfdf_1.jpg")}}' alt="Los Angeles"></td>
-					  	<td><img style="height:700px" src='{{static_url("completed/fsdfdf_2.jpg")}}' alt="Los Angeles"></td>
-					  </tr>
-					  </table>
-					</div>
 					
-					<div class="item" style="align:center">
-					  <table border=0>
-					  <tr border=0>
-						<td><img style="height:700px" src='{{static_url("completed/fsdfdf_1.jpg")}}' alt="Los Angeles"></td>
-					  	<td><img style="height:700px" src='{{static_url("completed/fsdfdf_2.jpg")}}' alt="Los Angeles"></td>
-					  </tr>
-					  </table>
-					</div>
-
-					<div class="item">
-						<img style="width:30%" src='{{static_url("completed/fsdfdf_3.jpg")}}' alt="New York">
-					</div>
-
 				</div>
 				</div>
 

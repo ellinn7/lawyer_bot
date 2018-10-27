@@ -75,3 +75,37 @@ def highlight(image_paths, highlights):
 
 #for im in overlay_images:
 #  print(im)
+
+def generateJpegPath(tiff_path, page_number):
+#
+  base_name = os.path.basename(tiff_path)
+  name = os.path.splitext(base_name)[0]
+
+  tiff_template = name + '.tiff'
+  jpeg_template = str(page_number) + "_" + name + '.jpeg'
+  
+  return tiff_path.replace(tiff_template, jpeg_template)
+#
+
+def tiffToJpg(tiff_path):
+#
+  image_paths = []
+  
+  image = Image.open(tiff_path)
+  for i in range(0, image.n_frames):
+    image.seek(i)
+    out = image.convert("RGB")
+    jpeg_path = generateJpegPath(tiff_path, i+1)
+    out.save(jpeg_path, "JPEG", quality=90)
+    
+    image_paths.append(jpeg_path)
+
+  return image_paths
+#
+
+#tiff_path = 'd:/hack/tifftojpg/contract2.tiff'
+#result = tiffToJpg(tiff_path)
+#
+#print("result:")
+#for j in result:
+#  print(j)
