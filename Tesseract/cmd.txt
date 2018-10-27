@@ -1,0 +1,1 @@
+pvt.cppan.demo.google.tesseract.tesseract-master.exe --tessdata-dir ./tessdata ./test/example5.jpg ./test/out --oem 1 --psm 6 -l rus pdf
