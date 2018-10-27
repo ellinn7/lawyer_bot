@@ -89,8 +89,26 @@ for x in listdiff:
     x.priority = 3
   if (x.priority == -1):
     x.priority = 1
-  print(x.value, x.filename, x.line, x.linenum, x.index, x.coord, x.priority)
-	
-
+  	
+for x in listdiff:
+     correctstr = x.line
+    if x.filename != "contract2":
+        correctstr = correctstr.replace('[[[', '')
+        correctstr = correctstr.replace(']]]', '')
+        tmp = re.split(r'\{\{\{.+\}\}\}', str(correctstr))
+        newstr = ''
+        for tmpitem in tmp:
+            newstr += tmpitem
+        correctstr = newstr
+    else:
+        correctstr = correctstr.replace('{{{', '')
+        correctstr = correctstr.replace('}}}', '')
+        tmp = re.split(r'\[\[\[.+\]\]\]', str(correctstr))
+        newstr = ''
+        for tmpitem in tmp:
+            newstr += tmpitem
+        correctstr = newstr
+    strarr = correctstr.split()
+    print(strarr)
 
 
