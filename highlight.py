@@ -42,7 +42,7 @@ def generateOverlayFileName(full_path):
 
 def highlight(image_paths, highlights):
 #
-  overlay_images = []
+  overlay_image_paths = []
 
   for i in range(0, len(image_paths)):
     image = Image.open(image_paths[i])
@@ -59,10 +59,10 @@ def highlight(image_paths, highlights):
 
     new_name = generateOverlayFileName(image_paths[i])
     image.save(new_name)
-    overlay_images.append(new_name)
+    overlay_image_paths.append(new_name)
 
   del draw
-  return overlay_images
+  return overlay_image_paths
 #
 
 #grey = Color(50, 50, 50, 64)
