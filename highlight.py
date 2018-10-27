@@ -40,13 +40,11 @@ def generateOverlayFileName(full_path):
   return full_path.replace(name, name + "_overlay")
 #
 
-def highlight(image_paths, highlights):
-#
-  overlay_image_paths = []
-
-  for i in range(0, len(image_paths)):
-    image = Image.open(image_paths[i])
-
+def highlight(image_path, highlights):
+#  
+  image = Image.open(image_path)
+  
+  for i in range(0, len(highlights)):
     draw = ImageDraw.Draw(image, 'RGBA')
     draw.rectangle([highlights[i].starting_coordinate.x,
                     highlights[i].starting_coordinate.y,
@@ -57,12 +55,11 @@ def highlight(image_paths, highlights):
                             highlights[i].color.b,
                             highlights[i].color.a))
 
-    new_name = generateOverlayFileName(image_paths[i])
-    image.save(new_name)
-    overlay_image_paths.append(new_name)
+  new_name = generateOverlayFileName(image_path)
+  image.save(new_name)
 
   del draw
-  return overlay_image_paths
+  return new_name
 #
 
 #grey = Color(50, 50, 50, 64)
