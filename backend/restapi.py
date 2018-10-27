@@ -11,6 +11,7 @@ import BackEnd.tornado.web as TornadoWeb
 import unicodedata
 import random
 import string
+import detectstamp.stamp as stamp
 
 from BackEnd.tornado.options import define, options
 
@@ -25,7 +26,8 @@ class Application(TornadoWeb.Application):
     def __init__(self):
         handlers = [
             (r"/demo", IndexHandler),
-            (r"/upload/", DocsVerification)
+            (r"/upload/", DocsVerification),
+			(r"/stamp/", StampDetection),
         ]
         settings = {
             "static_path": "C:\\DEV\\lawyer_bot\\BackEnd\\TPL"
@@ -69,6 +71,32 @@ class DocsVerification(TornadoWeb.RequestHandler):
             fname = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
             resultDocument = fname + extension
 
+            self.write({"success": True, "resultDocument": resultDocument})
+        except Exception as ex:
+            print(ex)
+            self.write({"success": False})
+			
+class StampDetection(TornadoWeb.RequestHandler):
+    def post(self):
+        try:
+            workdir = dirname(dirname(__file__))
+            uploadPath = os.path.join(workdir, r'BackEnd\\uploads')
+            overlayPath = os.path.join(workdir, r'BackEnd\\overlay')
+            print("Get Etalon Document")
+            etalonDocument = self.request.files['etalonDocument'][0]
+            if etalonDocument['filename'] == '':
+                return self.write({"success":False})
+            original_fname = etalonDocument['filename']
+            extension = os.path.splitext(original_fname)[1]
+            filename = ''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(20))
+            final_filename = filename + extension
+            output_file =  open(os.path.join(uploadPath, final_filename), 'wb')
+            output_file.write(etalonDocument['body'])
+
+            imgPath = os.path.join(overlayPath, r'test.jpg')
+            resultPath = os.path.join(overlayPath, r'test_result.jpg')
+            resultDocument = "test_result.jpg"
+            (correct, circles_count, positions, description) = stamp.detect(imgPath, resultPath, False, True)
             self.write({"success": True, "resultDocument": resultDocument})
         except Exception as ex:
             print(ex)
